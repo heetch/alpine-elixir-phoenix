@@ -1,4 +1,4 @@
-FROM bitwalker/alpine-elixir:latest
+FROM quay.io/heetch/elixir:1.5.2
 MAINTAINER Paul Schoenfelder <paulschoenfelder@gmail.com>
 
 # Important!  Update this no-op ENV variable when this Dockerfile
