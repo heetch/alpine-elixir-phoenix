@@ -1,4 +1,4 @@
-FROM quay.io/heetch/elixir:1.5.2
+FROM quay.io/heetch/elixir:1.6
 MAINTAINER Paul Schoenfelder <paulschoenfelder@gmail.com>
 
 # Important!  Update this no-op ENV variable when this Dockerfile
