@@ -1,7 +1,7 @@
 .PHONY: help
 
 VERSION ?= `cat VERSION`
-IMAGE_NAME ?= bitwalker/alpine-elixir-phoenix
+IMAGE_NAME ?= quay.io/heetch/phoenix
 
 help:
 	@echo "$(IMAGE_NAME):$(VERSION)"
