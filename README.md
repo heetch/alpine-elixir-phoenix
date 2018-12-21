@@ -2,7 +2,7 @@
 
 This Dockerfile provides everything you need to run your Phoenix application in Docker out of the box.
 
-It is based on my `alpine-erlang` image, and installs Elixir (1.5.x), Node.js (6.2.x), Hex and Rebar. It can handle compiling
+It is based on my `alpine-erlang` image, and installs Elixir (1.6.4), Node.js (6.10.x), Hex and Rebar. It can handle compiling
 your Node and Elixir dependencies as part of it's build.
 
 ## Usage
@@ -16,13 +16,10 @@ To boot straight to a prompt in the image:
 
 ```
 $ docker run --rm -it --user=1000001 bitwalker/alpine-elixir-phoenix iex
-Erlang/OTP 18 [erts-7.3] [source] [64-bit] [smp:2:2] [async-threads:10] [kernel-poll:false]
+Erlang/OTP 20 [erts-9.1.3] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:10] [hipe] [kernel-poll:false]
 
-Interactive Elixir (1.2.4) - press Ctrl+C to exit (type h() ENTER for help)
+Interactive Elixir (1.6.4) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)>
-BREAK: (a)bort (c)ontinue (p)roc info (i)nfo (l)oaded
-       (v)ersion (k)ill (D)b-tables (d)istribution
-a
 ```
 
 Extending for your own application:
@@ -39,18 +36,21 @@ ADD mix.exs mix.lock ./
 RUN mix do deps.get, deps.compile
 
 # Same with npm deps
-ADD package.json package.json
-RUN npm install
+ADD assets/package.json assets/
+RUN cd assets && \
+    npm install
 
 ADD . .
 
 # Run frontend build, compile, and digest assets
-RUN brunch build --production && \
-    mix do compile, phoenix.digest
+RUN cd assets/ && \
+    npm run deploy && \
+    cd - && \
+    mix do compile, phx.digest
 
 USER default
 
-CMD ["mix", "phoenix.server"]
+CMD ["mix", "phx.server"]
 ```
 
 It is recommended when using this that you have the following in `.dockerignore` when running `docker build`:
@@ -58,7 +58,7 @@ It is recommended when using this that you have the following in `.dockerignore`
 ```
 _build
 deps
-node_modules
+assets/node_modules
 test
 ```
 
